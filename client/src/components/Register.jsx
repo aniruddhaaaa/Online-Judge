@@ -6,7 +6,7 @@ import axios from 'axios';
 const Register = () => {
     const navigate = useNavigate();
     const [data, setData] = useState({
-        name: '',
+        username: '',
         email: '',
         password: '',
         confirmPassword: '',
@@ -15,14 +15,14 @@ const Register = () => {
 
     const handleRegister = async (e) => {
         e.preventDefault();
-        const { name, email, password, confirmPassword } = data;
+        const { username, email, password, confirmPassword } = data;
         if (confirmPassword !== password) {
             setError("Make sure to enter the same password.");
             return;
         }
         try {
-            const response = await axios.post('http://localhost:5000/register', { name, email, password }); // Add full URL
-            setData({ name: '', email: '', password: '', confirmPassword: '' });
+            const response = await axios.post('http://localhost:5000/register', { username, email, password }); // Change name to username
+            setData({ username: '', email: '', password: '', confirmPassword: '' });
             console.log("Registration Successful", response.data);
             navigate('/login');
         } catch (error) {
@@ -30,7 +30,6 @@ const Register = () => {
             console.log(error);
         }
     };
-    
 
     const handleChange = (e) => {
         setData({ ...data, [e.target.name]: e.target.value });
@@ -42,11 +41,11 @@ const Register = () => {
                 <h2 className="text-2xl mb-6 text-center">Register</h2>
                 <form onSubmit={handleRegister}>
                     <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-bold mb-2">Name</label>
+                        <label className="block text-gray-700 text-sm font-bold mb-2">Username</label> {/* Change label to Username */}
                         <input
                             type="text"
-                            name="name"
-                            value={data.name}
+                            name="username"
+                            value={data.username} // Change name to username
                             onChange={handleChange}
                             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             required

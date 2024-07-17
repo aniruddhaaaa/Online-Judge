@@ -1,27 +1,32 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react';
+import { useNavigate, Link } from 'react-router-dom'; // Import Link
+import axios from 'axios'; // Import axios
 
-const LoginPage = () => {
+const Login = () => {
     const navigate = useNavigate();
     const [data, setData] = useState({
-        email : '',
-        password : '',
+        email: '',
+        password: '',
     });
     const [error, setError] = useState('');
 
     const handleLogin = async (e) => {
         e.preventDefault();
         const { email, password } = data;
-        try{
-            const { data } = await axios.post('/login', { email, password });
-            setData({});
-            console.log("Succesfully logged in to the account", data);
+        try {
+            const response = await axios.post('http://localhost:5000/login', { email, password }); // Add full URL
+            setData({ email: '', password: '' });
+            console.log("Successfully logged in to the account", response.data);
             navigate('/dashboard');
-        }
-        catch(error){
+        } catch (error) {
             setError(error.message);
             console.log(error);
         }
+    };
+    
+
+    const handleChange = (e) => {
+        setData({ ...data, [e.target.name]: e.target.value });
     };
 
     return (
@@ -33,8 +38,9 @@ const LoginPage = () => {
                         <label className="block text-gray-700 text-sm font-bold mb-2">Email</label>
                         <input
                             type="email"
+                            name="email" // Add name attribute
                             value={data.email}
-                            onChange={(e) => setEmail({data, email : e.target.value})}
+                            onChange={handleChange} // Use handleChange
                             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             required
                         />
@@ -43,8 +49,9 @@ const LoginPage = () => {
                         <label className="block text-gray-700 text-sm font-bold mb-2">Password</label>
                         <input
                             type="password"
+                            name="password" // Add name attribute
                             value={data.password}
-                            onChange={(e) => setPassword({data, password : e.target.value})}
+                            onChange={handleChange} // Use handleChange
                             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             required
                         />
@@ -58,9 +65,14 @@ const LoginPage = () => {
                         </button>
                     </div>
                 </form>
+                {error && <p className="text-red-500 mt-4">{error}</p>}
+                <p className="mt-4">Don't have an account?</p>
+                <Link to="/register" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                    Register
+                </Link>
             </div>
         </div>
     );
 };
 
-export default LoginPage;
+export default Login;

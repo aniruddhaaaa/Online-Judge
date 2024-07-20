@@ -15,6 +15,7 @@ const Login = () => {
         const { email, password } = data;
         try {
             const response = await axios.post('http://localhost:5000/login', { email, password }); // Add full URL
+            localStorage.setItem('token', response.data.token);
             setData({ email: '', password: '' });
             console.log("Successfully logged in to the account", response.data);
             navigate('/dashboard');
@@ -67,7 +68,7 @@ const Login = () => {
                 </form>
                 {error && <p className="text-red-500 mt-4">{error}</p>}
                 <p className="mt-4">Don't have an account?</p>
-                <Link to="/register" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                <Link to="/register" className="text-blue-500 hover:text-blue-700">
                     Register
                 </Link>
             </div>

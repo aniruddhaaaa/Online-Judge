@@ -26,7 +26,7 @@ const Register = () => {
             console.log("Registration Successful", response.data);
             navigate('/login');
         } catch (error) {
-            setError(error.message);
+            setError("Account already exist");
             console.log(error);
         }
     };

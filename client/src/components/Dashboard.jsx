@@ -1,21 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { getUserProfile } from '../services/api';
 import axios from 'axios';
 
 const Dashboard = () => {
-    const [topPerformers, setTopPerformers] = useState([]);
+    const [leaderboard, setLeaderboard] = useState([]);
     const [problems, setProblems] = useState([]);
     const [user, setUser] = useState({});
     const navigate = useNavigate();
 
     useEffect(() => {
-        // Fetch top performers
+        // Fetch leaderboard
         const fetchLeaderboard = async () => {
             try {
                 const response = await axios.get('http://localhost:5000/leaderboard');
                 setLeaderboard(response.data);
             } catch (error) {
-                console.error('Error fetching the Leaderboard:', error);
+                console.error('Error fetching the leaderboard:', error);
             }
         };
 
@@ -29,24 +30,21 @@ const Dashboard = () => {
             }
         };
 
-        // Fetch user profile
-        const fetchUserProfile = async () => {
-            try {
-                const token = localStorage.getItem('token');
-                const response = await axios.get('http://localhost:5000/user', {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                setUser(response.data);
-            } catch (error) {
-                console.error('Error fetching user profile:', error);
-            }
-        };
+        // const fetchUserProfile = async () => {
+        //     try {
+        //       const userData = await getUserProfile();
+        //       setUser(userData);
+        //     } catch (error) {
+        //       console.error('Error fetching user data:', error);
+        //       navigate('/login');
+        //     }
+        //   };
+        
+        
 
         fetchLeaderboard();
         fetchProblems();
-        fetchUserProfile();
+        // fetchUserProfile();
     }, []);
 
     const handleLogout = () => {
@@ -59,7 +57,7 @@ const Dashboard = () => {
             <header className="bg-blue-500 text-white p-4 flex justify-between items-center">
                 <h1 className="text-2xl">Dashboard</h1>
                 <div>
-                    <span className="mr-4">Hello, {user.username}</span>
+                    <span className="mr-4">Hello, {user.userName || 'Guest'}</span>
                     <button onClick={handleLogout} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
                         Logout
                     </button>
